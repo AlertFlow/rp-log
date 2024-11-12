@@ -6,6 +6,7 @@ import (
 	"gitlab.justlab.xyz/alertflow-public/runner/pkg/executions"
 	"gitlab.justlab.xyz/alertflow-public/runner/pkg/models"
 
+	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -20,16 +21,18 @@ func (p *LogPlugin) Init() models.Plugin {
 	}
 }
 
-func (p *LogPlugin) Details() models.ActionDetails {
-	return models.ActionDetails{
-		ID:          "log",
-		Name:        "Log Message",
-		Description: "Prints a Log Message on Runner stdout",
-		Icon:        "solar:clipboard-list-broken",
-		Type:        "log",
-		Category:    "Utility",
-		Function:    p.Execute,
-		Params:      nil,
+func (p *LogPlugin) Details() models.PluginDetails {
+	return models.PluginDetails{
+		Action: models.ActionDetails{
+			ID:          "log",
+			Name:        "Log Message",
+			Description: "Prints a Log Message on Runner stdout",
+			Icon:        "solar:clipboard-list-broken",
+			Type:        "log",
+			Category:    "Utility",
+			Function:    p.Execute,
+			Params:      nil,
+		},
 	}
 }
 
@@ -53,6 +56,8 @@ func (p *LogPlugin) Execute(execution models.Execution, flow models.Flows, paylo
 	}
 	return nil, true, false, false, false
 }
+
+func (p *LogPlugin) Handle(context *gin.Context) {}
 
 // Exported symbol for the plugin
 var Plugin LogPlugin
