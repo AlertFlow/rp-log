@@ -11,7 +11,16 @@ import (
 
 type LogPlugin struct{}
 
-func (p *LogPlugin) Init() models.ActionDetails {
+func (p *LogPlugin) Init() models.Plugin {
+	return models.Plugin{
+		Name:    "Log",
+		Type:    "action",
+		Version: "1.0.1",
+		Creator: "JustNZ",
+	}
+}
+
+func (p *LogPlugin) Details() models.ActionDetails {
 	return models.ActionDetails{
 		ID:          "log",
 		Name:        "Log Message",
