@@ -16,7 +16,7 @@ func (p *LogPlugin) Init() models.Plugin {
 	return models.Plugin{
 		Name:    "Log",
 		Type:    "action",
-		Version: "1.0.1",
+		Version: "1.0.4",
 		Creator: "JustNZ",
 	}
 }
