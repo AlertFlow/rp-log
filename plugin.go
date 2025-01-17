@@ -59,12 +59,7 @@ func (p *LogPlugin) Execute(execution models.Execution, flow models.Flows, paylo
 
 	for _, param := range action.Params {
 		if param.Key == "AdditionalMessage" {
-			additionalMessageBytes, err := json.Marshal(param.Value)
-			if err != nil {
-				log.Error("Error converting additional message to JSON:", err)
-				return nil, false, false, false, true
-			}
-			additionalMessage = string(additionalMessageBytes)
+			additionalMessage = param.Value
 		}
 	}
 
