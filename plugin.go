@@ -27,7 +27,7 @@ func (p *LogPlugin) Init() models.Plugin {
 func (p *LogPlugin) Details() models.PluginDetails {
 	params := []models.Param{
 		{
-			Key:         "additional_message",
+			Key:         "AdditionalMessage",
 			Type:        "text",
 			Default:     "",
 			Required:    false,
@@ -58,8 +58,13 @@ func (p *LogPlugin) Execute(execution models.Execution, flow models.Flows, paylo
 	additionalMessage := ""
 
 	for _, param := range action.Params {
-		if param.Key == "additional_message" {
-			additionalMessage = param.Value
+		if param.Key == "AdditionalMessage" {
+			additionalMessageBytes, err := json.Marshal(param.Value)
+			if err != nil {
+				log.Error("Error converting additional message to JSON:", err)
+				return nil, false, false, false, true
+			}
+			additionalMessage = string(additionalMessageBytes)
 		}
 	}
 
