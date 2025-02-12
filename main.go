@@ -68,9 +68,7 @@ func handle(req protocol.Request) protocol.Response {
 	if req.Action == "details" {
 		return protocol.Response{
 			Success: true,
-			Data: map[string]interface{}{
-				"plugin": Details(),
-			},
+			Plugin:  Details(),
 		}
 	}
 

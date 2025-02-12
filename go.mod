@@ -2,7 +2,7 @@ module github.com/AlertFlow/rp-log
 
 go 1.23
 
-require github.com/AlertFlow/runner v0.19.0-beta.0.20250212141054-982a248d6c42
+require github.com/AlertFlow/runner v0.19.0-beta.0.20250212144541-d6e7bb33c3b9
 
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
