@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -66,7 +65,6 @@ func Details() models.Plugin {
 }
 
 func handle(req protocol.Request) protocol.Response {
-	fmt.Println(req)
 	// Plugin-specific logic here
 	return protocol.Response{
 		Success: true,
