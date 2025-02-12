@@ -65,11 +65,26 @@ func Details() models.Plugin {
 }
 
 func handle(req protocol.Request) protocol.Response {
-	// Plugin-specific logic here
+	if req.Action == "details" {
+		return protocol.Response{
+			Success: true,
+			Data: map[string]interface{}{
+				"plugin": Details(),
+			},
+		}
+	}
+
+	if req.Action == "process" {
+		return protocol.Response{
+			Success: true,
+			Data: map[string]interface{}{
+				"result": "processed",
+			},
+		}
+	}
+
 	return protocol.Response{
-		Success: true,
-		Data: map[string]interface{}{
-			"result": "processed",
-		},
+		Success: false,
+		Error:   "Invalid action",
 	}
 }
