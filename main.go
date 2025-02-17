@@ -48,8 +48,9 @@ func (p *Plugin) ExecuteTask(request plugins.ExecuteTaskRequest) (plugins.Respon
 	err := executions.UpdateStep(request.Config, request.Execution.ID.String(), models.ExecutionSteps{
 		ID: request.Step.ID,
 		Messages: []string{
-			"Execution: " + request.Execution.ID.String(),
-			"Step: " + request.Step.ID.String(),
+			"Execution ID: " + request.Execution.ID.String(),
+			"Step ID: " + request.Step.ID.String(),
+			"Additional Message",
 			additionalMessage,
 			"Log Action finished",
 		},
