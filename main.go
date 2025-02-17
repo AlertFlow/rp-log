@@ -16,10 +16,6 @@ import (
 	"github.com/hashicorp/go-plugin"
 )
 
-type Receiver struct {
-	Receiver string `json:"receiver"`
-}
-
 // Plugin is an implementation of the Plugin interface
 type Plugin struct{}
 
