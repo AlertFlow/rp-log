@@ -54,7 +54,7 @@ func (p *Plugin) ExecuteTask(request plugins.ExecuteTaskRequest) (plugins.Respon
 			additionalMessage,
 			"Log Action finished",
 		},
-		Status:     "finished",
+		Status:     "success",
 		StartedAt:  time.Now(),
 		FinishedAt: time.Now(),
 	})
