@@ -30,7 +30,7 @@ func (p *Plugin) ExecuteTask(request plugins.ExecuteTaskRequest) (plugins.Respon
 
 	if strings.Contains(additionalMessage, "payload.") {
 		// convert payload to string
-		payloadBytes, err := json.Marshal(request.Payload.Payload)
+		payloadBytes, err := json.Marshal(request.Alert.Payload)
 		if err != nil {
 			return plugins.Response{
 				Success: false,
@@ -65,7 +65,7 @@ func (p *Plugin) ExecuteTask(request plugins.ExecuteTaskRequest) (plugins.Respon
 	}, nil
 }
 
-func (p *Plugin) HandlePayload(request plugins.PayloadHandlerRequest) (plugins.Response, error) {
+func (p *Plugin) HandleAlert(request plugins.AlertHandlerRequest) (plugins.Response, error) {
 	return plugins.Response{
 		Success: false,
 	}, errors.New("not implemented")
@@ -75,7 +75,7 @@ func (p *Plugin) Info() (models.Plugins, error) {
 	var plugin = models.Plugins{
 		Name:    "Log",
 		Type:    "action",
-		Version: "1.1.0",
+		Version: "1.1.1",
 		Author:  "JustNZ",
 		Actions: models.Actions{
 			Name:        "Log Message",
@@ -89,11 +89,11 @@ func (p *Plugin) Info() (models.Plugins, error) {
 					Type:        "text",
 					Default:     "",
 					Required:    false,
-					Description: "Additional message to log. To use payload data, use 'payload.<key>'",
+					Description: "Additional message to log. To use the alert payload data, use 'payload.<key>'",
 				},
 			},
 		},
-		Endpoints: models.PayloadEndpoints{},
+		Endpoints: models.AlertEndpoints{},
 	}
 
 	return plugin, nil
@@ -110,8 +110,8 @@ func (s *PluginRPCServer) ExecuteTask(request plugins.ExecuteTaskRequest, resp *
 	return err
 }
 
-func (s *PluginRPCServer) HandlePayload(request plugins.PayloadHandlerRequest, resp *plugins.Response) error {
-	result, err := s.Impl.HandlePayload(request)
+func (s *PluginRPCServer) HandleAlert(request plugins.AlertHandlerRequest, resp *plugins.Response) error {
+	result, err := s.Impl.HandleAlert(request)
 	*resp = result
 	return err
 }
