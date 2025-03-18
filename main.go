@@ -11,7 +11,7 @@ import (
 	"github.com/v1Flows/runner/pkg/executions"
 	"github.com/v1Flows/runner/pkg/plugins"
 
-	"github.com/v1Flows/alertFlow/services/backend/pkg/models"
+	"github.com/v1Flows/shared-library/pkg/models"
 
 	"github.com/hashicorp/go-plugin"
 )
@@ -28,7 +28,7 @@ func (p *Plugin) ExecuteTask(request plugins.ExecuteTaskRequest) (plugins.Respon
 		}
 	}
 
-	if strings.Contains(additionalMessage, "payload.") {
+	if strings.Contains(additionalMessage, "payload.") && request.Platform == "alertflow" {
 		// convert payload to string
 		payloadBytes, err := json.Marshal(request.Alert.Payload)
 		if err != nil {
@@ -43,17 +43,22 @@ func (p *Plugin) ExecuteTask(request plugins.ExecuteTaskRequest) (plugins.Respon
 
 	err := executions.UpdateStep(request.Config, request.Execution.ID.String(), models.ExecutionSteps{
 		ID: request.Step.ID,
-		Messages: []string{
-			"Execution ID: " + request.Execution.ID.String(),
-			"Step ID: " + request.Step.ID.String(),
-			"Additional Message",
-			additionalMessage,
-			"Log Action finished",
+		Messages: []models.Message{
+			{
+				Title: "Log",
+				Lines: []string{
+					"Execution ID: " + request.Execution.ID.String(),
+					"Step ID: " + request.Step.ID.String(),
+					"Additional Message",
+					additionalMessage,
+					"Log Action finished",
+				},
+			},
 		},
 		Status:     "success",
 		StartedAt:  time.Now(),
 		FinishedAt: time.Now(),
-	})
+	}, request.Platform)
 	if err != nil {
 		return plugins.Response{
 			Success: false,
@@ -65,19 +70,19 @@ func (p *Plugin) ExecuteTask(request plugins.ExecuteTaskRequest) (plugins.Respon
 	}, nil
 }
 
-func (p *Plugin) HandleAlert(request plugins.AlertHandlerRequest) (plugins.Response, error) {
+func (p *Plugin) EndpointRequest(request plugins.EndpointRequest) (plugins.Response, error) {
 	return plugins.Response{
 		Success: false,
 	}, errors.New("not implemented")
 }
 
-func (p *Plugin) Info() (models.Plugins, error) {
-	var plugin = models.Plugins{
+func (p *Plugin) Info() (models.Plugin, error) {
+	var plugin = models.Plugin{
 		Name:    "Log",
 		Type:    "action",
-		Version: "1.1.2",
+		Version: "1.2.0",
 		Author:  "JustNZ",
-		Actions: models.Actions{
+		Action: models.Action{
 			Name:        "Log Message",
 			Description: "Logs a message in action messages",
 			Plugin:      "log",
@@ -93,7 +98,7 @@ func (p *Plugin) Info() (models.Plugins, error) {
 				},
 			},
 		},
-		Endpoints: models.AlertEndpoints{},
+		Endpoint: models.Endpoint{},
 	}
 
 	return plugin, nil
@@ -110,13 +115,13 @@ func (s *PluginRPCServer) ExecuteTask(request plugins.ExecuteTaskRequest, resp *
 	return err
 }
 
-func (s *PluginRPCServer) HandleAlert(request plugins.AlertHandlerRequest, resp *plugins.Response) error {
-	result, err := s.Impl.HandleAlert(request)
+func (s *PluginRPCServer) EndpointRequest(request plugins.EndpointRequest, resp *plugins.Response) error {
+	result, err := s.Impl.EndpointRequest(request)
 	*resp = result
 	return err
 }
 
-func (s *PluginRPCServer) Info(args interface{}, resp *models.Plugins) error {
+func (s *PluginRPCServer) Info(args interface{}, resp *models.Plugin) error {
 	result, err := s.Impl.Info()
 	*resp = result
 	return err
